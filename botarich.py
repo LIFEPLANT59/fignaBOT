@@ -9,10 +9,10 @@ from telegram.ext import (
     ContextTypes
 )
 
-# Загружаем переменные окружения из .env файла
+
 load_dotenv()
 
-# Получаем токен из переменных окружения
+
 TOKEN = os.getenv("BOT_TOKEN")
 
 if not TOKEN:
@@ -83,7 +83,7 @@ async def handle_buttons(update: Update, context: ContextTypes.DEFAULT_TYPE):
             "Напиши номер работы (1, 2 или 3), чтобы получить подробности.",
             reply_markup=get_back_keyboard()
         )
-        context.user_data["mode"] = "choosing_lab"  # Исправлено: было "modeosing_lab"
+        context.user_data["mode"] = "choosing_lab" 
 
     elif text == "📖 Теория":
         
