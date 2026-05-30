@@ -3,7 +3,7 @@ from telegram import ReplyKeyboardMarkup
 def get_main_keyboard():
     return ReplyKeyboardMarkup([
         ["📚 Помощь с задачей", "🔬 Лабораторные работы"],
-        ["📖 Теория", "👨‍🔬 Учёные"],
+        ["📖 Теория", "👨‍ Учёные"],
         ["❓ Частые вопросы", "⭐ Избранное"],
         ["📊 Статистика"]
     ], resize_keyboard=True)
