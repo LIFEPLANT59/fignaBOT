@@ -5,6 +5,9 @@ from keyboards import get_main_keyboard
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     stats = context.user_data.setdefault("stats", {})
     stats["menu_opens"] = stats.get("menu_opens", 0) + 1
+    
+    greeting = "Привет!"  
+    
     await update.message.reply_text(
         f"{greeting} Я твой личный репетитор по физике.\n"
         f"Я не буду решать задачи за тебя, но научу решать их самостоятельно!\n"
