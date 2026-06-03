@@ -8,7 +8,7 @@ async def handle_task_flow(update: Update, context: ContextTypes.DEFAULT_TYPE):
     text = update.message.text
     mode = context.user_data.get("mode")
     
-    # Вход в режим помощи с задачей
+   
     if text == "📚 Помощь с задачей":
         await update.message.reply_text(
             "Выбери тему задачи:",
@@ -29,7 +29,7 @@ async def handle_task_flow(update: Update, context: ContextTypes.DEFAULT_TYPE):
         )
         return
     
-    # Получение условия задачи и запрос к ИИ
+    
     if mode == "waiting_for_task":
         await update.message.reply_text(
             "🤔 Анализирую условие... Подожди 10-20 секунд.",
@@ -39,18 +39,18 @@ async def handle_task_flow(update: Update, context: ContextTypes.DEFAULT_TYPE):
         topic = context.user_data.get("topic", "Физика")
         chat_history = context.user_data.get("chat_history", [])
         
-        # Формируем запрос с темой
+       
         full_message = f"[Тема: {topic}]\nУсловие задачи: {text}"
         
-        # Запрашиваем помощь у ИИ
+       
         ai_response = ask_tutor(full_message, chat_history)
         
-        # Сохраняем историю (последние 6 сообщений)
+        
         chat_history.append({"role": "user", "content": text})
         chat_history.append({"role": "assistant", "content": ai_response})
         context.user_data["chat_history"] = chat_history[-6:]
         
-        # Отправляем ответ
+        
         await update.message.reply_text(
             ai_response,
             reply_markup=get_back_keyboard(),

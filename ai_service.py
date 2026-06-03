@@ -13,7 +13,7 @@ def ask_tutor(user_message: str, chat_history: list = None) -> str:
     payload = {
         "model": MODEL_NAME,
         "messages": messages,
-        "stream": False,
+        "stream": False,    
         "temperature": 0.3,
         "options": {"num_predict": 512}
     }
