@@ -6,34 +6,19 @@ from keyboards import get_main_keyboard
 from handlers.commands import start, help_command, menu_command
 from handlers.navigation import handle_navigation
 from handlers.task_solver import handle_task_flow
-import httpx
 
 load_dotenv()
 
 TOKEN = os.getenv("BOT_TOKEN")
 
-# Проверка, используем ли мы Tor через переменные окружения
-use_tor = os.environ.get('ALL_PROXY') or os.environ.get('https_proxy')
-
-if use_tor:
-    print("🔒 Бот запущен через Tor прокси")
-    # Создаем кастомный HTTPX клиент с прокси
-    http_client = httpx.AsyncClient(
-        proxies="socks5://127.0.0.1:9050",
-        timeout=httpx.Timeout(60.0, connect=60.0),
-        http2=False
-    )
-    request = HTTPXRequest(http_client=http_client)
-else:
-    print("🚀 Бот запущен без прокси")
-    # Обычная настройка
-    request = HTTPXRequest(
-        connect_timeout=60.0,
-        read_timeout=60.0,
-        write_timeout=60.0,
-        pool_timeout=60.0,
-        http_version="1.1",
-    )
+# Простая настройка без прокси в коде
+request = HTTPXRequest(
+    connect_timeout=60.0,
+    read_timeout=60.0,
+    write_timeout=60.0,
+    pool_timeout=60.0,
+    http_version="1.1",
+)
 
 if not TOKEN:
     raise ValueError("Токен не найден! Убедитесь, что файл .env содержит BOT_TOKEN")

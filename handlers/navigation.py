@@ -60,7 +60,7 @@ async def handle_navigation(update: Update, context: ContextTypes.DEFAULT_TYPE):
         )
         context.user_data["mode"] = "favorites"
 
-    elif text == " Статистика":
+    elif text == "📊 Статистика":
         stats = context.user_data.get("stats", {})
         opens = stats.get("menu_opens", 0)
         theory_views = stats.get("theory_views", 0)
