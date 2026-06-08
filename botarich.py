@@ -1,7 +1,7 @@
 import os
 from dotenv import load_dotenv
 from telegram.ext import ApplicationBuilder, CommandHandler, MessageHandler, filters
-from telegram.request import HTTPXRequest
+
 from keyboards import get_main_keyboard
 from handlers.commands import start, help_command, menu_command
 from handlers.navigation import handle_navigation
@@ -10,22 +10,14 @@ from handlers.task_solver import handle_task_flow
 load_dotenv()
 
 TOKEN = os.getenv("BOT_TOKEN")
-
-# Простая настройка без прокси в коде
-request = HTTPXRequest(
-    connect_timeout=60.0,
-    read_timeout=60.0,
-    write_timeout=60.0,
-    pool_timeout=60.0,
-    http_version="1.1",
-)
-
 if not TOKEN:
     raise ValueError("Токен не найден! Убедитесь, что файл .env содержит BOT_TOKEN")
 
 if __name__ == "__main__":
-    app = ApplicationBuilder().token(TOKEN).request(request).build()
+    # Простое создание приложения — пусть система/VPN сама маршрутизирует трафик
+    app = ApplicationBuilder().token(TOKEN).build()
     
+    # Регистрируем обработчики
     app.add_handler(CommandHandler("start", start))
     app.add_handler(CommandHandler("help", help_command))
     app.add_handler(CommandHandler("menu", menu_command))
