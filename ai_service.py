@@ -18,18 +18,28 @@ def ask_tutor(user_message: str, chat_history: list = None) -> str:
         "options": {"num_predict": 512}
     }
     
+    print(f"[AI] Отправляю запрос к Ollama...")
+    
     try:
         response = requests.post(OLLAMA_URL, json=payload, timeout=120)
-        response.raise_for_status()
+        print(f"[AI] Статус ответа: {response.status_code}")
+        
+        if response.status_code != 200:
+            return f"Ошибка сервера Ollama: {response.text}"
+            
         data = response.json()
         content = data.get("message", {}).get("content", "").strip()
         
         if not content:
-            return "️ Нейросеть вернула пустой ответ. Попробуй переформулировать задачу."
+            print("[AI] Модель вернула пустой контент!")
+            return "Нейросеть вернула пустой ответ. Попробуй переформулировать."
+            
+        print(f"[AI] Ответ получен (длина: {len(content)} символов)")
         return content
+        
     except requests.exceptions.ConnectionError:
-        return "🔌 Не удалось подключиться к Ollama. Убедись, что она запущена (`ollama serve`)."
-    except requests.exceptions.Timeout:
-        return "⏳ Нейросеть думает слишком долго (>120 сек). Попробуй позже."
+        print("[AI] ОШИБКА: Нет соединения с localhost:11434. Ollama запущена?")
+        return "ОШИБКА: Не удалось подключиться к Ollama. Убедись, что она запущена командой 'ollama serve'."
     except Exception as e:
-        return f"⚠️ Ошибка нейросети: {str(e)}"
+        print(f"[AI] КРИТИЧЕСКАЯ ОШИБКА: {str(e)}")
+        return f"Ошибка: {str(e)}"
