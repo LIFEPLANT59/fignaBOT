@@ -1,8 +1,6 @@
-import os
 import requests
 from prompts import SYSTEM_PROMPT
 
-# Ollama по умолчанию слушает только localhost. В Windows это работает.
 OLLAMA_URL = "http://localhost:11434/api/chat"
 MODEL_NAME = "qwen3.5:4b"
 
@@ -23,13 +21,15 @@ def ask_tutor(user_message: str, chat_history: list = None) -> str:
     try:
         response = requests.post(OLLAMA_URL, json=payload, timeout=120)
         response.raise_for_status()
-        result = response.json().get("message", {}).get("content", "")
-        if not result.strip():
-            return "⚠️ Нейросеть вернула пустой ответ. Попробуй переформулировать задачу."
-        return result
+        data = response.json()
+        content = data.get("message", {}).get("content", "").strip()
+        
+        if not content:
+            return "️ Нейросеть вернула пустой ответ. Попробуй переформулировать задачу."
+        return content
     except requests.exceptions.ConnectionError:
         return "🔌 Не удалось подключиться к Ollama. Убедись, что она запущена (`ollama serve`)."
     except requests.exceptions.Timeout:
-        return "⏳ Нейросеть думает слишком долго (>120 сек). Попробуй позже или перезапусти Ollama."
+        return "⏳ Нейросеть думает слишком долго (>120 сек). Попробуй позже."
     except Exception as e:
-        return f"⚠️ Ошибка: {str(e)}"
+        return f"⚠️ Ошибка нейросети: {str(e)}"
