@@ -1,6 +1,7 @@
 import os
 from dotenv import load_dotenv
 from telegram.ext import ApplicationBuilder, CommandHandler, MessageHandler, filters
+from telegram.request import HTTPXRequest
 
 from keyboards import get_main_keyboard
 from handlers.commands import start, help_command, menu_command
@@ -13,7 +14,14 @@ if not TOKEN:
     raise ValueError("Токен не найден!")
 
 if __name__ == "__main__":
-    app = ApplicationBuilder().token(TOKEN).build()
+    # Явно указываем прокси Karing (стандартный HTTP-порт)
+    request = HTTPXRequest(
+        proxy_url="http://127.0.0.1:7890",
+        connect_timeout=15,
+        read_timeout=15
+    )
+    
+    app = ApplicationBuilder().token(TOKEN).request(request).build()
     
     app.add_handler(CommandHandler("start", start))
     app.add_handler(CommandHandler("help", help_command))
